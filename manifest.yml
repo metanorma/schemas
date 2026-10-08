@@ -1,0 +1,13 @@
+# The canonical schema host: https://schemas.metanorma.org
+#
+# Each entry is served at https://schemas.metanorma.org/<path>, sourced
+# verbatim from the owning product repository. To publish a schema,
+# add an entry here — nothing else changes.
+
+schemas:
+  - path: registry/documents-index/v1.json
+    source: https://raw.githubusercontent.com/metanorma/standards-registry/main/schema/documents-index.schema.json
+    title: Registry documents-index contract (v1)
+  - path: registry/search-index/v1.json
+    source: https://raw.githubusercontent.com/metanorma/standards-registry/main/schema/search-index.schema.json
+    title: Registry search-index derived view (v1)

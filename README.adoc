@@ -1,0 +1,33 @@
+= schemas.metanorma.org
+
+The canonical host for versioned schema contracts of the Metanorma
+ecosampus: https://schemas.metanorma.org.
+
+== How it works
+
+* Schemas are *owned by their product repositories* — this repo only
+  serves them. It holds no schema copies.
+* `manifest.yml` maps each served path to its source URL. The deploy
+  workflow (push, schedule, or manual) pulls each entry verbatim,
+  validates it as JSON, and publishes to GitHub Pages with the custom
+  domain `schemas.metanorma.org`.
+* To publish a new schema: add one manifest entry. Nothing else.
+
+Currently served:
+
+[cols="1,1"]
+|===
+|Path |Contract
+|/registry/documents-index/v1.json |Standards registry catalog (documents-index) — from https://github.com/metanorma/standards-registry[metanorma/standards-registry]
+|/registry/search-index/v1.json |Standards registry search derived view — from https://github.com/metanorma/standards-registry[metanorma/standards-registry]
+|===
+
+== Stability
+
+Schema `$id` values under this host are permanent identifiers.
+Within a major version, changes are additive only.
+
+== Custom domain
+
+`schemas.metanorma.org` is a CNAME to `metanorma.github.io`
+(GoDaddy DNS). HTTPS is enforced once the certificate is provisioned.
