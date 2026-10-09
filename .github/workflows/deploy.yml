@@ -51,17 +51,32 @@ jobs:
           python3 - <<'PY'
           import pathlib, subprocess, yaml
 
-          manifest = yaml.safe_load(open("manifest.yml"))["schemas"]
-          for entry in manifest:
+          data = yaml.safe_load(open("manifest.yml"))
+          appearance = data.get("appearance", {})
+          for entry in data["schemas"]:
               raw = pathlib.Path("site") / entry["path"]
               docs = pathlib.Path("site") / entry["path"].removesuffix(".json")
+              config = pathlib.Path("docs-config.yml")
+              config.write_text(yaml.safe_dump({
+                  "title": entry["title"],
+                  "theme": "light",
+                  "appearance": {
+                      "subtitle": appearance.get("subtitle"),
+                      "logos": {"square": {
+                          "light": {"url": appearance.get("logo_light")},
+                          "dark": {"url": appearance.get("logo_dark")},
+                      }},
+                  },
+              }))
               subprocess.run([
                   "lutaml-jsonschema", "spa", str(raw),
+                  "--config", str(config),
                   "--output", str(docs),
-                  "--title", entry["title"],
-                  "--subtitle", "schemas.metanorma.org",
               ], check=True)
           PY
+
+      - name: Stage static assets
+        run: cp -r assets site/assets
 
       - name: Generate index page
         run: |
