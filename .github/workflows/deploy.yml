@@ -47,7 +47,8 @@ jobs:
 
       - name: Generate schema documentation (lutaml-jsonschema)
         run: |
-          gem install lutaml-jsonschema -v 0.1.19 --no-document
+          # 0.1.19 shipped without frontend/dist; 0.1.21 is the first release with it
+          gem install lutaml-jsonschema -v 0.1.21 --no-document
           python3 - <<'PY'
           import pathlib, subprocess, yaml
 
