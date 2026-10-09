@@ -4,6 +4,13 @@
 # verbatim from the owning product repository. To publish a schema,
 # add an entry here — nothing else changes.
 
+# Branding shared by the index page and the generated documentation
+# SPAs (lutaml-jsonschema appearance metadata).
+appearance:
+  subtitle: schemas.metanorma.org
+  logo_light: https://schemas.metanorma.org/assets/metanorma-logo_icon-light.svg
+  logo_dark: https://schemas.metanorma.org/assets/metanorma-logo_icon-dark.svg
+
 schemas:
   - path: registry/documents-index/v1.json
     source: https://raw.githubusercontent.com/metanorma/standards-registry/main/schema/documents-index.schema.json
