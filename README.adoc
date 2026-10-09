@@ -9,9 +9,19 @@ ecosampus: https://schemas.metanorma.org.
   serves them. It holds no schema copies.
 * `manifest.yml` maps each served path to its source URL. The deploy
   workflow (push, schedule, or manual) pulls each entry verbatim,
-  validates it as JSON, and publishes to GitHub Pages with the custom
-  domain `schemas.metanorma.org`.
-* To publish a new schema: add one manifest entry. Nothing else.
+  validates it as JSON, publishes to GitHub Pages with the custom
+  domain `schemas.metanorma.org`, and generates browsable documentation
+  for each schema with
+  https://github.com/lutaml/lutaml-jsonschema[lutaml-jsonschema].
+* Each entry serves at three places:
+** `<path>` — the raw JSON Schema, byte-identical to the source
+   (this is the permanent `$id` URL; never change it)
+** `<path without .json>/` — a styled documentation SPA generated from
+   the schema (navigation, property tables, search)
+** the index page links both plus the source repository.
+* To publish a new schema: add one manifest entry. Nothing else —
+  the raw file, the documentation page and the index entry are all
+  generated from it.
 
 Currently served:
 

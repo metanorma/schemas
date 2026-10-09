@@ -32,30 +32,40 @@ jobs:
 
           manifest = yaml.safe_load(open("manifest.yml"))["schemas"]
           site = pathlib.Path("site")
-          rows = []
           for entry in manifest:
               data = urllib.request.urlopen(entry["source"], timeout=60).read()
               target = site / entry["path"]
               target.parent.mkdir(parents=True, exist_ok=True)
               target.write_bytes(data)
               json.loads(data)  # never publish malformed JSON
-              rows.append((f"/{entry['path']}", entry["title"], entry["source"]))
               print(f"staged {entry['path']} ({len(data)} bytes)")
-
-          listing = "\n".join(
-              f"<li><a href='{p}'>{p}</a> — {t} "
-              f"[<a href='{s}'>source</a>]</li>" for p, t, s in rows
-          )
-          (site / "index.html").write_text(f"""<!DOCTYPE html>
-          <html lang="en"><head><meta charset="utf-8">
-          <title>schemas.metanorma.org</title></head>
-          <body><h1>schemas.metanorma.org</h1>
-          <p>Canonical, versioned JSON Schema contracts of the Metanorma
-          ecosystem. Sources live in their product repositories; this site
-          is regenerated from <code>manifest.yml</code> on every change.</p>
-          <ul>{listing}</ul>
-          </body></html>""")
           PY
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Generate schema documentation (lutaml-jsonschema)
+        run: |
+          gem install lutaml-jsonschema -v 0.1.19 --no-document
+          python3 - <<'PY'
+          import pathlib, subprocess, yaml
+
+          manifest = yaml.safe_load(open("manifest.yml"))["schemas"]
+          for entry in manifest:
+              raw = pathlib.Path("site") / entry["path"]
+              docs = pathlib.Path("site") / entry["path"].removesuffix(".json")
+              subprocess.run([
+                  "lutaml-jsonschema", "spa", str(raw),
+                  "--output", str(docs),
+                  "--title", entry["title"],
+                  "--subtitle", "schemas.metanorma.org",
+              ], check=True)
+          PY
+
+      - name: Generate index page
+        run: |
+          python3 generate_index.py
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
